@@ -1,0 +1,32 @@
+{
+  "name": "deskmate",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck"
+  },
+  "dependencies": {
+    "@nuxtjs/supabase": "^1.4.5",
+    "@pinia/nuxt": "^0.9.0",
+    "@vueuse/core": "^12.5.0",
+    "@vueuse/nuxt": "^12.5.0",
+    "date-fns": "^4.1.0",
+    "firebase": "^10.14.1",
+    "nuxt": "^3.15.4",
+    "pinia": "^2.3.1",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@nuxtjs/tailwindcss": "^6.13.1",
+    "@vite-pwa/nuxt": "^0.10.6",
+    "typescript": "^5.7.3",
+    "vue-tsc": "^2.2.0"
+  }
+}

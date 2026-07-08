@@ -1,0 +1,153 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Pretendard as the runtime Korean fallback for Toss Product Sans */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    @apply text-ink font-sans antialiased;
+    -webkit-tap-highlight-color: transparent;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    /* Page background lives on body so it fills the whole viewport,
+       including the margins outside the centered app column on desktop. */
+    @apply bg-grey-100;
+  }
+
+  /* Tabular numerals for schedule times & counts */
+  .tnum {
+    font-feature-settings: 'tnum' 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  ::selection {
+    background: #e8f3ff;
+  }
+}
+
+@layer components {
+  /* ---- Buttons (TDS geometry: 16px radius, 17/600) ---- */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl font-semibold
+      transition-all duration-150 ease-standard active:scale-[0.985]
+      disabled:opacity-40 disabled:pointer-events-none select-none;
+  }
+  .btn-xl {
+    @apply h-14 px-5 text-[17px];
+  }
+  .btn-lg {
+    @apply h-12 px-5 text-[17px];
+  }
+  .btn-md {
+    @apply h-[38px] px-4 text-[15px] rounded-[10px];
+  }
+  .btn-sm {
+    @apply h-8 px-3 text-[13px] rounded-lg;
+  }
+  .btn-primary {
+    @apply bg-primary text-white active:bg-primary-hover;
+  }
+  .btn-dark {
+    @apply bg-grey-700 text-white;
+  }
+  .btn-danger {
+    @apply bg-error text-white;
+  }
+  .btn-weak {
+    @apply bg-primary/10 text-primary-hover;
+  }
+  .btn-neutral {
+    @apply bg-[rgba(2,32,71,0.05)] text-grey-700;
+  }
+  .btn-ghost {
+    @apply bg-transparent text-grey-600 active:bg-grey-100;
+  }
+
+  /* ---- Inputs (box variant) ---- */
+  .field {
+    @apply w-full rounded-[14px] border border-[rgba(2,32,71,0.06)]
+      bg-[rgba(0,23,51,0.02)] px-4 py-[14px] text-[17px] text-grey-800
+      placeholder:text-grey-400 outline-none transition-colors
+      focus:border-primary;
+  }
+  .field-error {
+    @apply border-error focus:border-error;
+  }
+
+  /* ---- Card ---- */
+  .card {
+    @apply rounded-xl bg-white shadow-card;
+  }
+  .card-compact {
+    @apply rounded-lg border border-grey-200 bg-white;
+  }
+
+  /* ---- Badge ---- */
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-[12px] px-[7px] py-[3px]
+      text-[13px] font-bold leading-none;
+  }
+  .badge-blue {
+    @apply bg-primary/[0.15] text-primary-hover;
+  }
+  .badge-green {
+    @apply bg-success/[0.15] text-[#16a34a];
+  }
+  .badge-red {
+    @apply bg-error/[0.15] text-[#dc2626];
+  }
+  .badge-yellow {
+    @apply bg-warning/[0.15] text-[#c2410c];
+  }
+  .badge-grey {
+    @apply bg-[rgba(2,32,71,0.05)] text-grey-700;
+  }
+  .badge-fill-blue {
+    @apply bg-primary text-white;
+  }
+
+  /* ---- Segmented control ---- */
+  .segment {
+    @apply flex rounded-xl bg-grey-100 p-1;
+  }
+  .segment-item {
+    @apply flex-1 rounded-[9px] py-2 text-center text-[14px] font-semibold
+      text-grey-500 transition-all;
+  }
+  .segment-item-active {
+    @apply bg-white text-ink shadow-subtle;
+  }
+}
+
+/* Bottom-sheet + fade transitions */
+.sheet-enter-active,
+.sheet-leave-active {
+  transition: transform 0.25s cubic-bezier(0, 0, 0.2, 1);
+}
+.sheet-enter-from,
+.sheet-leave-to {
+  transform: translateY(100%);
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
