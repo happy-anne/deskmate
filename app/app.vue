@@ -46,7 +46,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="mx-auto min-h-dvh max-w-app">
+  <div class="min-h-dvh">
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>

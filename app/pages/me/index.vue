@@ -65,7 +65,7 @@ async function logout() {
   <div>
     <AppHeader title="내정보" />
 
-    <div class="space-y-3 px-4 pb-6 pt-1">
+    <div class="mx-auto max-w-app space-y-3 px-4 pb-6 pt-1">
       <!-- Profile -->
       <div class="card flex items-center gap-4 p-5">
         <div class="grid h-14 w-14 place-items-center rounded-full bg-primary/10 text-primary">

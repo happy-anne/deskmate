@@ -24,6 +24,10 @@ const members = computed(() =>
     (u) => (u.is_placeholder || u.status !== 'pending') && u.name.includes(q.value.trim())
   )
 )
+// Total members (placeholders + approved/rejected), independent of the search box.
+const memberCount = computed(
+  () => users.value.filter((u) => u.is_placeholder || u.status !== 'pending').length
+)
 
 async function setStatus(u: AppUser, status: AppUser['status']) {
   const { error } = await client.from('users').update({ status }).eq('id', u.id)
@@ -35,6 +39,12 @@ async function setStatus(u: AppUser, status: AppUser['status']) {
 // create placeholder (approved by definition — no login)
 const addOpen = ref(false)
 const newName = ref('')
+const nameInput = ref<HTMLInputElement | null>(null)
+
+// Autofocus the name field when the sheet opens (after it has mounted).
+watch(addOpen, (open) => {
+  if (open) nextTick(() => nameInput.value?.focus())
+})
 async function createPlaceholder() {
   const name = newName.value.trim()
   if (name.length < 1) return
@@ -74,7 +84,7 @@ async function remove(u: AppUser) {
       </template>
     </AppHeader>
 
-    <div class="px-4 pb-6 pt-1">
+    <div class="mx-auto max-w-app px-4 pb-6 pt-1">
       <!-- Pending approvals -->
       <section v-if="pending.length" class="mb-4">
         <div class="mb-2 flex items-center gap-2 px-1">
@@ -101,6 +111,10 @@ async function remove(u: AppUser) {
       </section>
 
       <!-- Members -->
+      <div class="mb-2 flex items-center gap-2 px-1">
+        <span class="text-body font-semibold text-grey-700">전체 사용자</span>
+        <span class="badge badge-grey">{{ memberCount }}명</span>
+      </div>
       <input v-model="q" class="field mb-3" placeholder="이름 검색" />
       <ul class="divide-y divide-grey-100 overflow-hidden rounded-xl bg-white shadow-card">
         <li v-for="u in members" :key="u.id" class="flex items-center gap-3 px-4 py-3.5">
@@ -139,7 +153,7 @@ async function remove(u: AppUser) {
       <p class="mb-4 text-body text-grey-600">
         로그인 없이 이름만으로 근무에 배정할 수 있어요. 같은 이름으로 가입하면 이력을 이어받을 수 있어요.
       </p>
-      <input v-model="newName" class="field" placeholder="이름" @keyup.enter="createPlaceholder" />
+      <input ref="nameInput" v-model="newName" class="field" placeholder="이름" @keyup.enter="createPlaceholder" />
       <button class="btn btn-xl btn-primary mt-6 w-full" @click="createPlaceholder">추가하기</button>
     </BottomSheet>
   </div>

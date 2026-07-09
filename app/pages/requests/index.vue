@@ -68,7 +68,7 @@ async function applyWith(mine: Schedule) {
   <div>
     <AppHeader title="요청" />
 
-    <div class="mx-auto max-w-app px-5 pb-2 pt-1">
+    <div class="mx-auto max-w-app px-4 pb-2 pt-1">
       <div class="segment">
         <button
           class="segment-item"
@@ -89,7 +89,7 @@ async function applyWith(mine: Schedule) {
       </div>
     </div>
 
-    <div class="space-y-3 px-4 pb-6 pt-2">
+    <div class="mx-auto max-w-app space-y-3 px-4 pb-6 pt-2">
       <!-- RECEIVED -->
       <template v-if="tab === 'received'">
         <div v-if="!req.received.value.length" class="py-16 text-center text-body text-grey-500">
@@ -192,7 +192,12 @@ async function applyWith(mine: Schedule) {
         </div>
 
         <!-- Open board -->
-        <p class="px-1 pb-1 pt-1 text-body font-semibold text-grey-700">모집 중인 근무</p>
+        <p
+          v-if="req.openRecruits.value.length"
+          class="px-1 pb-1 pt-1 text-body font-semibold text-grey-700"
+        >
+          모집 중인 근무
+        </p>
         <div v-if="!req.openRecruits.value.length" class="py-10 text-center text-body text-grey-500">
           지금 모집 중인 교환이 없어요.
         </div>

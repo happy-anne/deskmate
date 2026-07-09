@@ -106,7 +106,7 @@ async function removePreset(id: string) {
       </template>
     </AppHeader>
 
-    <div class="space-y-3 px-4 pb-6 pt-1">
+    <div class="mx-auto max-w-app space-y-3 px-4 pb-6 pt-1">
       <div v-if="!presets.length" class="py-16 text-center text-body text-grey-500">
         프리셋이 없어요. 하절기·동절기 시간을 추가해보세요.
       </div>

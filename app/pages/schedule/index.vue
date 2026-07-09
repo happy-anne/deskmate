@@ -38,10 +38,6 @@ function openCell(cell: Schedule) {
   sheetOpen.value = true
 }
 
-function changeMonth(n: number) {
-  sched.load(shiftMonth(sched.month.value, n))
-}
-
 async function doRecruit() {
   if (!active.value) return
   busy.value = true
@@ -84,7 +80,7 @@ async function offerMine(mine: Schedule) {
 
 <template>
   <div>
-    <AppHeader title="근무표">
+    <AppHeader title="스케줄">
       <template #action>
         <NuxtLink
           v-if="profile?.role === 'admin'"
@@ -97,24 +93,12 @@ async function offerMine(mine: Schedule) {
       </template>
     </AppHeader>
 
-    <!-- Month switcher -->
-    <div class="mx-auto flex max-w-app items-center justify-between px-5 pb-1 pt-1">
-      <button
-        class="grid h-9 w-9 place-items-center rounded-full text-grey-600 active:bg-grey-100"
-        @click="changeMonth(-1)"
-      >
-        <AppIcon name="chevron-left" :size="22" />
-      </button>
+    <!-- Current month -->
+    <div class="mx-auto flex max-w-app items-center justify-center px-4 pb-1 pt-1">
       <span class="text-subtitle text-ink tnum">{{ monthLabel(sched.month.value) }}</span>
-      <button
-        class="grid h-9 w-9 place-items-center rounded-full text-grey-600 active:bg-grey-100"
-        @click="changeMonth(1)"
-      >
-        <AppIcon name="chevron-right" :size="22" />
-      </button>
     </div>
 
-    <div class="space-y-3 px-4 pb-6 pt-2">
+    <div class="mx-auto max-w-app space-y-3 px-4 pb-6 pt-2">
       <!-- Loading skeleton -->
       <template v-if="sched.loading.value && !sched.events.value.length">
         <div v-for="i in 3" :key="i" class="h-40 animate-pulse rounded-xl bg-grey-100" />
@@ -129,10 +113,10 @@ async function offerMine(mine: Schedule) {
           <AppIcon name="calendar" :size="28" />
         </div>
         <p class="mt-4 text-body-lg text-grey-700">
-          아직 이번 달 근무표가 없어요
+          아직 이번 달 스케줄이 없어요
         </p>
         <p class="mt-1 text-body text-grey-500">
-          관리자가 근무표를 등록하면 여기에 표시돼요.
+          관리자가 스케줄을 등록하면 여기에 표시돼요.
         </p>
       </div>
 

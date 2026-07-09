@@ -34,7 +34,7 @@ function open(n: any) {
       </template>
     </AppHeader>
 
-    <div class="px-4 pb-6 pt-1">
+    <div class="mx-auto max-w-app px-4 pb-6 pt-1">
       <div v-if="!notif.items.value.length" class="py-16 text-center">
         <div class="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-grey-100 text-grey-400">
           <AppIcon name="bell" :size="28" />

@@ -60,7 +60,7 @@ function submit() {
         v-for="(k, i) in keys"
         :key="i"
         :disabled="k === ''"
-        class="grid h-16 place-items-center rounded-2xl text-[26px] font-medium text-ink transition-colors active:bg-grey-100 disabled:opacity-0"
+        class="grid h-16 place-items-center rounded-2xl text-[27px] font-medium text-ink transition-colors active:bg-grey-100 disabled:opacity-0"
         @click="press(k)"
       >
         <AppIcon v-if="k === 'del'" name="chevron-left" :size="26" />

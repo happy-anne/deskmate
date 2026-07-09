@@ -30,6 +30,7 @@ const { data: pendingCount } = await useAsyncData('admin-pending-count', async (
 })
 
 const menu = computed(() => [
+  { to: '/admin/schedule', icon: 'calendar', title: '스케줄 관리', desc: '월 생성·날짜·배정·공개', badge: 0 },
   {
     to: '/admin/users',
     icon: 'users',
@@ -37,7 +38,6 @@ const menu = computed(() => [
     desc: '가입 승인·임시 사용자 관리',
     badge: pendingCount.value || 0,
   },
-  { to: '/admin/schedule', icon: 'calendar', title: '근무표 관리', desc: '월 생성·근무일·배정·공개', badge: 0 },
   { to: '/admin/presets', icon: 'settings', title: '시간 프리셋', desc: '하절기·동절기 시간 구성', badge: 0 },
 ])
 </script>
@@ -46,10 +46,30 @@ const menu = computed(() => [
   <div>
     <AppHeader title="관리자" back />
 
-    <div class="space-y-3 px-4 pb-6 pt-1">
+    <div class="mx-auto max-w-app space-y-3 px-4 pb-6 pt-1">
+      <NuxtLink
+        v-for="m in menu"
+        :key="m.to"
+        :to="m.to"
+        class="flex items-center gap-4 rounded-xl bg-white p-5 shadow-card active:bg-grey-50"
+      >
+        <div class="grid h-11 w-11 place-items-center rounded-xl bg-primary/10 text-primary">
+          <AppIcon :name="m.icon" :size="22" />
+        </div>
+        <div class="flex-1">
+          <p class="text-body-lg font-semibold text-ink">{{ m.title }}</p>
+          <p class="text-body-sm text-grey-500">{{ m.desc }}</p>
+        </div>
+        <span v-if="m.badge" class="badge badge-fill-blue">{{ m.badge }}</span>
+        <AppIcon name="chevron-right" :size="20" class="text-grey-400" />
+      </NuxtLink>
+
       <!-- 교환 불가 기능 -->
-      <div class="card flex items-center justify-between p-5">
-        <div>
+      <div class="card flex items-center gap-4 p-5">
+        <div class="grid h-11 w-11 place-items-center rounded-xl bg-primary/10 text-primary">
+          <AppIcon name="pin" :size="22" />
+        </div>
+        <div class="flex-1">
           <p class="text-body-lg font-semibold text-ink">교환 불가 기능</p>
           <p class="mt-0.5 text-body-sm text-grey-500">
             사용자가 근무에 핀을 걸어 교환에서 제외할 수 있어요
@@ -68,23 +88,6 @@ const menu = computed(() => [
           />
         </button>
       </div>
-
-      <NuxtLink
-        v-for="m in menu"
-        :key="m.to"
-        :to="m.to"
-        class="flex items-center gap-4 rounded-xl bg-white p-5 shadow-card active:bg-grey-50"
-      >
-        <div class="grid h-11 w-11 place-items-center rounded-xl bg-primary/10 text-primary">
-          <AppIcon :name="m.icon" :size="22" />
-        </div>
-        <div class="flex-1">
-          <p class="text-body-lg font-semibold text-ink">{{ m.title }}</p>
-          <p class="text-body-sm text-grey-500">{{ m.desc }}</p>
-        </div>
-        <span v-if="m.badge" class="badge badge-fill-blue">{{ m.badge }}</span>
-        <AppIcon name="chevron-right" :size="20" class="text-grey-400" />
-      </NuxtLink>
     </div>
   </div>
 </template>

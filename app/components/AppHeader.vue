@@ -5,13 +5,28 @@ defineProps<{
   back?: boolean
 }>()
 const router = useRouter()
+
+// Cast a soft shadow under the header only once the body is scrolled,
+// so at rest the header blends into the page background.
+const scrolled = ref(false)
+function onScroll() {
+  scrolled.value = window.scrollY > 4
+}
+onMounted(() => {
+  onScroll()
+  window.addEventListener('scroll', onScroll, { passive: true })
+})
+onBeforeUnmount(() => window.removeEventListener('scroll', onScroll))
 </script>
 
 <template>
   <header
-    class="sticky top-0 z-20 mx-auto max-w-app bg-white/95 pt-safe-t backdrop-blur"
+    class="sticky top-0 z-20 bg-grey-100 pt-safe-t transition-shadow duration-200"
+    :class="scrolled ? 'shadow-header' : ''"
   >
-    <div class="flex min-h-14 items-center gap-1 px-5 py-2.5">
+    <div
+      class="mx-auto flex min-h-14 max-w-app items-center gap-1 px-4 py-2.5 md:py-5"
+    >
       <button
         v-if="back"
         class="-ml-2 grid h-9 w-9 place-items-center rounded-full text-grey-700 active:bg-grey-100"

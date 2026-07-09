@@ -63,7 +63,7 @@ async function submit() {
     <div class="mt-16">
       <h1 class="text-heading-lg text-ink">처음 오셨네요</h1>
       <p class="mt-2 text-body-lg text-grey-600">
-        근무표에 표시할 정보를 알려주세요.
+        스케줄에 표시할 정보를 알려주세요.
       </p>
     </div>
 

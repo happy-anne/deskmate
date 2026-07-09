@@ -74,11 +74,17 @@ export default defineNuxtConfig({
       ],
     },
     workbox: {
-      navigateFallback: '/',
-      globPatterns: ['**/*.{js,css,html,png,svg,ico,woff2}'],
+      // No SPA navigation fallback: this is an SSR app, so each route (e.g.
+      // /admin/schedule) is rendered by the server. Falling back to '/' here
+      // made every hard refresh land on index → redirect to /schedule.
+      globPatterns: ['**/*.{js,css,png,svg,ico,woff2}'],
     },
     client: { installPrompt: true },
-    devOptions: { enabled: true, type: 'module' },
+    // Keep the SW off during dev: @vite-pwa's dev SW hardcodes a navigation
+    // fallback to '/', which hijacked hard refreshes on deep routes and sent
+    // them to index → /schedule. The production SW (no navigateFallback) is
+    // unaffected. Flip enabled:true only when testing PWA install/offline.
+    devOptions: { enabled: false, type: 'module' },
   },
 
   runtimeConfig: {

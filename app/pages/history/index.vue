@@ -34,9 +34,9 @@ function label(r: any) {
 
 <template>
   <div>
-    <AppHeader title="변경내역" subtitle="교환으로 바뀐 근무 기록" />
+    <AppHeader title="변경내역" />
 
-    <div class="space-y-3 px-4 pb-6 pt-2">
+    <div class="mx-auto max-w-app space-y-3 px-4 pb-6 pt-2">
       <div v-if="!groups.length" class="py-16 text-center">
         <div class="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-grey-100 text-grey-400">
           <AppIcon name="history" :size="28" />
