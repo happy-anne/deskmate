@@ -45,23 +45,24 @@ export default defineEventHandler(async (event) => {
 
   // Parse the raw body ourselves: pg_net can send a Content-Type that trips
   // H3's readBody ("Invalid JSON body"), even though the JSON itself is valid.
-  const raw = await readRawBody(event, 'utf8')
-  let payload: any = {}
-  if (raw) {
+  // pg_net (0.20.x) can prepend raw header lines to the body
+  // ("User-Agent: …\r\nContent-Length: …\r\n\r\n{json}"), which breaks JSON
+  // parsing. Parse clean JSON first; if that fails, strip to the first object.
+  const raw = (await readRawBody(event, 'utf8')) || ''
+  const tryParse = (s: string): any => {
     try {
-      payload = JSON.parse(raw)
+      return JSON.parse(s)
     } catch {
-      // TEMP DEBUG: echo exactly what arrived so we can see pg_net's payload
-      // via net._http_response.content. Remove once push is verified.
-      setResponseStatus(event, 422)
-      return {
-        debug: 'v3-echo',
-        contentType: getHeader(event, 'content-type'),
-        rawType: typeof raw,
-        rawLen: (raw as string).length,
-        rawStart: (raw as string).slice(0, 300),
-      }
+      return undefined
     }
+  }
+  let payload = tryParse(raw)
+  if (payload === undefined) {
+    const i = raw.indexOf('{')
+    if (i >= 0) payload = tryParse(raw.slice(i))
+  }
+  if (payload == null || typeof payload !== 'object') {
+    throw createError({ statusCode: 400, statusMessage: 'Invalid JSON body' })
   }
   const record = payload?.record ?? payload
   const userId: string | undefined = record?.user_id
