@@ -51,8 +51,16 @@ export default defineEventHandler(async (event) => {
     try {
       payload = JSON.parse(raw)
     } catch {
-      console.error('[push] non-JSON body; content-type =', getHeader(event, 'content-type'))
-      throw createError({ statusCode: 400, statusMessage: 'Invalid JSON body' })
+      // TEMP DEBUG: echo exactly what arrived so we can see pg_net's payload
+      // via net._http_response.content. Remove once push is verified.
+      setResponseStatus(event, 422)
+      return {
+        debug: 'v3-echo',
+        contentType: getHeader(event, 'content-type'),
+        rawType: typeof raw,
+        rawLen: (raw as string).length,
+        rawStart: (raw as string).slice(0, 300),
+      }
     }
   }
   const record = payload?.record ?? payload
