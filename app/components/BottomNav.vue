@@ -15,7 +15,7 @@ const active = (to: string) => route.path.startsWith(to)
 
 <template>
   <nav
-    class="fixed inset-x-0 bottom-0 z-30 border-t border-grey-200 bg-white/95 pb-[calc(30px+env(safe-area-inset-bottom))] backdrop-blur"
+    class="fixed inset-x-0 bottom-0 z-30 border-t border-grey-200 bg-white/95 pb-[calc(21px+env(safe-area-inset-bottom))] backdrop-blur"
   >
     <ul class="mx-auto flex max-w-app">
       <li v-for="t in tabs" :key="t.to" class="flex-1">
