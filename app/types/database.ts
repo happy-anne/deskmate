@@ -11,6 +11,7 @@ import type {
   RecruitApplication,
   SwapHistory,
   AppNotification,
+  PushSubscription,
 } from './db'
 
 type Table<Row> = {
@@ -33,6 +34,7 @@ export interface Database {
       recruit_applications: Table<RecruitApplication>
       swap_history: Table<SwapHistory>
       notifications: Table<AppNotification>
+      push_subscriptions: Table<PushSubscription>
     }
     Views: Record<string, never>
     Functions: {

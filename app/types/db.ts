@@ -109,3 +109,12 @@ export interface AppNotification {
   is_read: boolean
   created_at: string
 }
+
+export interface PushSubscription {
+  id: string
+  user_id: string
+  endpoint: string
+  p256dh: string | null
+  auth: string | null
+  created_at: string
+}

@@ -23,6 +23,9 @@ export default defineNuxtConfig({
         'width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no',
       meta: [
         { name: 'theme-color', content: '#ffffff' },
+        // Standalone display on iOS + modern browsers. Both are needed: iOS
+        // reads the apple-* tags, others read mobile-web-app-capable.
+        { name: 'mobile-web-app-capable', content: 'yes' },
         { name: 'apple-mobile-web-app-capable', content: 'yes' },
         { name: 'apple-mobile-web-app-status-bar-style', content: 'default' },
         { name: 'apple-mobile-web-app-title', content: 'DeskMate' },
@@ -32,6 +35,10 @@ export default defineNuxtConfig({
         },
       ],
       link: [
+        // Link the manifest in the SSR HTML so iOS honours `scope`/`display`
+        // (keeps in-app navigation from leaking out to Safari). @vite-pwa only
+        // injects this client-side, which iOS can miss at "Add to Home Screen".
+        { rel: 'manifest', href: '/manifest.webmanifest' },
         { rel: 'apple-touch-icon', href: '/icons/icon-192.png' },
       ],
     },
@@ -78,6 +85,8 @@ export default defineNuxtConfig({
       // /admin/schedule) is rendered by the server. Falling back to '/' here
       // made every hard refresh land on index → redirect to /schedule.
       globPatterns: ['**/*.{js,css,png,svg,ico,woff2}'],
+      // Web Push handlers (push / notificationclick) live here.
+      importScripts: ['/push-sw.js'],
     },
     client: { installPrompt: true },
     // Keep the SW off during dev: @vite-pwa's dev SW hardcodes a navigation
@@ -88,16 +97,14 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    // Server-only (Vercel env vars) — used by /api/push/send.
+    vapidPrivateKey: process.env.VAPID_PRIVATE_KEY || '',
+    vapidSubject: process.env.VAPID_SUBJECT || '',
+    supabaseServiceKey: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
+    pushWebhookSecret: process.env.PUSH_WEBHOOK_SECRET || '',
     public: {
-      // FCM web push config — filled from env at build/runtime.
-      fcm: {
-        apiKey: '',
-        authDomain: '',
-        projectId: '',
-        messagingSenderId: '',
-        appId: '',
-        vapidKey: '',
-      },
+      // Web Push (VAPID) public key — safe to expose; used by the client to subscribe.
+      vapidPublicKey: process.env.VAPID_PUBLIC_KEY || '',
     },
   },
 
