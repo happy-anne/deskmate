@@ -54,6 +54,11 @@ export default defineNuxtConfig({
       exclude: ['/login', '/signup', '/confirm', '/onboarding', '/pending', '/reset'],
       cookieRedirect: false,
     },
+    // Keep users signed in for 30 days (module default is 8h). The SSR session
+    // cookie lives this long; Supabase refresh-token rotation keeps it valid.
+    cookieOptions: {
+      maxAge: 60 * 60 * 24 * 30,
+    },
   },
 
   pwa: {
