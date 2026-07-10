@@ -43,7 +43,18 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
   }
 
-  const payload = await readBody<any>(event)
+  // Parse the raw body ourselves: pg_net can send a Content-Type that trips
+  // H3's readBody ("Invalid JSON body"), even though the JSON itself is valid.
+  const raw = await readRawBody(event, 'utf8')
+  let payload: any = {}
+  if (raw) {
+    try {
+      payload = JSON.parse(raw)
+    } catch {
+      console.error('[push] non-JSON body; content-type =', getHeader(event, 'content-type'))
+      throw createError({ statusCode: 400, statusMessage: 'Invalid JSON body' })
+    }
+  }
   const record = payload?.record ?? payload
   const userId: string | undefined = record?.user_id
   if (!userId) throw createError({ statusCode: 400, statusMessage: 'Missing user_id' })
