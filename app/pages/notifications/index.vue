@@ -8,6 +8,7 @@ const ICON: Record<string, string> = {
   swap_accepted: 'check',
   swap_rejected: 'x',
   recruit_approved: 'check',
+  recruit_open: 'megaphone',
   schedule_published: 'calendar',
   signup_pending: 'user',
 }
@@ -16,6 +17,7 @@ function open(n: any) {
   notif.markRead(n.id)
   if (n.type === 'swap_request') navigateTo('/requests')
   else if (n.type === 'recruit_apply' || n.type === 'recruit_approved') navigateTo('/requests')
+  else if (n.type === 'recruit_open') navigateTo('/requests?tab=recruit')
   else if (n.type === 'schedule_published') navigateTo('/schedule')
   else if (n.type === 'swap_accepted') navigateTo('/history')
   else if (n.type === 'signup_pending') navigateTo('/admin/users')

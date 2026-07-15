@@ -7,7 +7,11 @@ const sched = useSchedule()
 const { profile } = useProfile()
 const { show, error: toastError } = useToast()
 
-const tab = ref<'received' | 'sent' | 'recruit'>('received')
+// 알림 딥링크 등에서 ?tab=recruit 로 진입하면 해당 탭을 연다.
+const initialTab = useRoute().query.tab
+const tab = ref<'received' | 'sent' | 'recruit'>(
+  initialTab === 'sent' || initialTab === 'recruit' ? initialTab : 'received'
+)
 
 await useAsyncData('requests', async () => {
   await req.load()
