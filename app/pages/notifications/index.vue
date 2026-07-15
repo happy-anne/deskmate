@@ -9,6 +9,7 @@ const ICON: Record<string, string> = {
   swap_rejected: 'x',
   recruit_approved: 'check',
   schedule_published: 'calendar',
+  signup_pending: 'user',
 }
 
 function open(n: any) {
@@ -17,6 +18,7 @@ function open(n: any) {
   else if (n.type === 'recruit_apply' || n.type === 'recruit_approved') navigateTo('/requests')
   else if (n.type === 'schedule_published') navigateTo('/schedule')
   else if (n.type === 'swap_accepted') navigateTo('/history')
+  else if (n.type === 'signup_pending') navigateTo('/admin/users')
 }
 </script>
 
