@@ -86,7 +86,20 @@ export interface RecruitApplication {
   request_id: string
   applicant_id: string
   applicant_schedule_id: string | null
+  is_deferred: boolean
   status: 'pending' | 'approved' | 'rejected'
+  created_at: string
+}
+
+export interface CoverAgreement {
+  id: string
+  request_id: string | null
+  coverer_id: string
+  covered_user_id: string
+  schedule_id: string | null
+  cover_month: string
+  return_month: string
+  dismissed: boolean
   created_at: string
 }
 

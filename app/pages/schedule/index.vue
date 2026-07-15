@@ -4,11 +4,16 @@ import type { Schedule } from '~/types/db'
 const { profile, pinFeatureOn } = useProfile()
 const sched = useSchedule()
 const swap = useSwap()
+const cover = useCover()
 const { show, error: toastError } = useToast()
 
 const meId = computed(() => profile.value?.id ?? null)
 
-await useAsyncData('schedule-' + sched.month.value, () => sched.load())
+await useAsyncData('schedule-' + sched.month.value, async () => {
+  await sched.load()
+  await cover.load()
+  return true
+})
 onMounted(() => sched.subscribe())
 onBeforeUnmount(() => sched.unsubscribe())
 
@@ -109,6 +114,28 @@ async function offerMine(mine: Schedule) {
         </NuxtLink>
       </template>
     </AppHeader>
+
+    <!-- 대신하기 되갚음 안내 배너 -->
+    <div v-if="cover.active.value.length" class="mx-auto max-w-app space-y-2 px-4 pt-2">
+      <div
+        v-for="c in cover.active.value"
+        :key="c.id"
+        class="flex items-center gap-2 rounded-xl bg-primary/[0.08] px-4 py-3"
+      >
+        <AppIcon name="swap" :size="18" class="shrink-0 text-primary" />
+        <p class="flex-1 text-body text-ink">
+          <span class="font-semibold">{{ c.covered?.name }}</span
+          >님이 대신해주기로 예정되어 있어요.
+        </p>
+        <button
+          class="grid h-7 w-7 shrink-0 place-items-center rounded-full text-grey-500 active:bg-grey-100"
+          aria-label="닫기"
+          @click="cover.dismiss(c.id)"
+        >
+          <AppIcon name="x" :size="16" />
+        </button>
+      </div>
+    </div>
 
     <!-- Current month -->
     <div class="mx-auto flex max-w-app items-center justify-center px-4 pb-1 pt-1">

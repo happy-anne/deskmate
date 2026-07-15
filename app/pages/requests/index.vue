@@ -22,8 +22,24 @@ onMounted(() => req.subscribe())
 onBeforeUnmount(() => req.unsubscribe())
 
 const meId = computed(() => profile.value?.id ?? null)
+
+function eventOf(s: Schedule) {
+  return sched.events.value.find((e) => e.id === s.event_id)
+}
+function weekNo(s: Schedule) {
+  const n = parseInt(eventOf(s)?.week_label ?? '', 10)
+  return Number.isNaN(n) ? Number.MAX_SAFE_INTEGER : n
+}
+// 지원 모달의 내 근무 목록: 주차 → 날짜 → 슬롯 번호 순.
 const myShifts = computed(() =>
-  sched.schedules.value.filter((s) => s.user_id === meId.value && !s.is_pinned)
+  sched.schedules.value
+    .filter((s) => s.user_id === meId.value && !s.is_pinned)
+    .sort(
+      (a, b) =>
+        weekNo(a) - weekNo(b) ||
+        (eventOf(a)?.date ?? '').localeCompare(eventOf(b)?.date ?? '') ||
+        a.slot_no - b.slot_no
+    )
 )
 
 const STATUS: Record<string, { label: string; cls: string }> = {
@@ -62,8 +78,19 @@ async function applyWith(mine: Schedule) {
     show('모집에 지원했어요')
     applyOpen.value = false
     await req.load()
-  } catch (e: any) {
-    toastError(e.message)
+  } catch (e) {
+    toastError(e)
+  }
+}
+// 근무를 걸지 않고 "대신하기"로 지원 (다음 달 되갚음).
+async function applyDeferred() {
+  try {
+    await swap.applyRecruitDeferred(applyTarget.value.id)
+    show('대신하기로 지원했어요')
+    applyOpen.value = false
+    await req.load()
+  } catch (e) {
+    toastError(e)
   }
 }
 </script>
@@ -177,7 +204,8 @@ async function applyWith(mine: Schedule) {
               >
                 <div>
                   <p class="text-body-lg font-medium text-ink">{{ a.applicant?.name }}</p>
-                  <p class="text-body-sm text-grey-500">{{ schedLabel(a.applicant_schedule) }} 근무 제시</p>
+                  <p v-if="a.is_deferred" class="text-body-sm text-warning">대신하기 · 다음 달 되갚음</p>
+                  <p v-else class="text-body-sm text-grey-500">{{ schedLabel(a.applicant_schedule) }} 근무 제시</p>
                 </div>
                 <button
                   v-if="r.status === 'pending' && a.status === 'pending'"
@@ -232,8 +260,20 @@ async function applyWith(mine: Schedule) {
         </button>
       </div>
       <p v-else class="rounded-xl bg-grey-50 p-4 text-body text-grey-600">
-        지원할 수 있는 내 근무가 없어요.
+        맞바꿀 수 있는 내 근무가 없어요. 아래에서 대신하기로 지원할 수 있어요.
       </p>
+
+      <!-- 대신해주고 나중에 바꾸기 -->
+      <button
+        class="mt-3 flex w-full items-center justify-between rounded-xl border border-dashed border-grey-300 px-4 py-3 text-left active:bg-grey-50"
+        @click="applyDeferred()"
+      >
+        <span class="min-w-0">
+          <span class="block text-body-lg font-medium text-ink">대신해주고 나중에 바꾸기</span>
+          <span class="block text-body-sm text-grey-500">이번 달엔 근무를 걸지 않고, 다음 달에 되갚아요</span>
+        </span>
+        <AppIcon name="arrowRight" :size="18" class="shrink-0 text-grey-400" />
+      </button>
     </BottomSheet>
   </div>
 </template>

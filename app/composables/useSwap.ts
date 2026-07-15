@@ -66,6 +66,23 @@ export function useSwap() {
     return data as RecruitApplication
   }
 
+  /** 대신하기(근무를 걸지 않고) 지원 — 이번 달 맞교환이 안 될 때. */
+  async function applyRecruitDeferred(requestId: string) {
+    if (!profile.value) throw new Error('로그인이 필요해요')
+    const { data, error } = await client
+      .from('recruit_applications')
+      .insert({
+        request_id: requestId,
+        applicant_id: profile.value.id,
+        applicant_schedule_id: null,
+        is_deferred: true,
+      })
+      .select()
+      .single()
+    if (error) throw error
+    return data as RecruitApplication
+  }
+
   const accept = async (id: string) => {
     const { error } = await client.rpc('accept_swap', { p_request_id: id })
     if (error) throw new Error(error.message)
@@ -91,6 +108,7 @@ export function useSwap() {
     requestDirect,
     openRecruit,
     applyRecruit,
+    applyRecruitDeferred,
     accept,
     reject,
     approveApplicant,

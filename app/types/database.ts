@@ -9,6 +9,7 @@ import type {
   Schedule,
   SwapRequest,
   RecruitApplication,
+  CoverAgreement,
   SwapHistory,
   AppNotification,
   PushSubscription,
@@ -32,6 +33,7 @@ export interface Database {
       schedules: Table<Schedule>
       swap_requests: Table<SwapRequest>
       recruit_applications: Table<RecruitApplication>
+      cover_agreements: Table<CoverAgreement>
       swap_history: Table<SwapHistory>
       notifications: Table<AppNotification>
       push_subscriptions: Table<PushSubscription>
@@ -41,6 +43,7 @@ export interface Database {
       accept_swap: { Args: { p_request_id: string }; Returns: void }
       reject_swap: { Args: { p_request_id: string }; Returns: void }
       approve_recruit: { Args: { p_application_id: string }; Returns: void }
+      dismiss_cover: { Args: { p_id: string }; Returns: void }
       promote_placeholder: {
         Args: { p_placeholder_id: string; p_real_id: string }
         Returns: void
