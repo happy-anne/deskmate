@@ -20,7 +20,8 @@ export function useToast() {
     }
   }
 
-  const error = (m: string) => show(m, 'error')
+  // 어떤 형태의 에러가 들어와도 사용자용 한글 문구로 바꿔서 보여준다.
+  const error = (m: unknown) => show(humanError(m), 'error')
 
   return { toasts, show, error }
 }

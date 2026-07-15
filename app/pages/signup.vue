@@ -51,13 +51,7 @@ async function submit() {
       email: email.value.trim(),
       password: password.value,
     })
-    if (error) {
-      throw new Error(
-        error.message.includes('already')
-          ? '이미 가입된 이메일이에요. 로그인해주세요.'
-          : error.message
-      )
-    }
+    if (error) throw error
     if (!data.session || !data.user) {
       // Email confirmation is enabled on the project.
       show('가입 확인 메일을 보냈어요. 메일 인증 후 로그인해주세요.')
@@ -88,8 +82,8 @@ async function submit() {
     }
 
     await navigateTo('/pending', { replace: true })
-  } catch (e: any) {
-    toastError(e.message ?? '문제가 생겼어요')
+  } catch (e) {
+    toastError(e)
   } finally {
     loading.value = false
   }

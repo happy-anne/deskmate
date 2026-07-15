@@ -35,13 +35,7 @@ async function login() {
     password: password.value,
   })
   loading.value = false
-  if (error) {
-    return toastError(
-      error.message.includes('Invalid')
-        ? '이메일 또는 비밀번호가 올바르지 않아요'
-        : error.message
-    )
-  }
+  if (error) return toastError(error)
   // watchEffect routes onward once the session is set.
 }
 </script>
