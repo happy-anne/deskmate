@@ -12,13 +12,30 @@ await useAsyncData('schedule-' + sched.month.value, () => sched.load())
 onMounted(() => sched.subscribe())
 onBeforeUnmount(() => sched.unsubscribe())
 
-// My shifts this month (for offering in a direct swap).
+function eventOf(s: Schedule) {
+  return sched.events.value.find((e) => e.id === s.event_id)
+}
+
+// week_label("3주")에서 주차 숫자를 뽑는다. 숫자가 없으면 뒤로 밀리도록 큰 값.
+function weekNo(s: Schedule) {
+  const n = parseInt(eventOf(s)?.week_label ?? '', 10)
+  return Number.isNaN(n) ? Number.MAX_SAFE_INTEGER : n
+}
+
+// My shifts this month (for offering in a direct swap), 주차 → 날짜 → 번호 순.
 const myShifts = computed(() =>
-  sched.schedules.value.filter((s) => s.user_id === meId.value)
+  sched.schedules.value
+    .filter((s) => s.user_id === meId.value)
+    .sort(
+      (a, b) =>
+        weekNo(a) - weekNo(b) ||
+        (eventOf(a)?.date ?? '').localeCompare(eventOf(b)?.date ?? '') ||
+        a.slot_no - b.slot_no
+    )
 )
 
 function shiftLabel(s: Schedule) {
-  const ev = sched.events.value.find((e) => e.id === s.event_id)
+  const ev = eventOf(s)
   return ev ? `${ev.week_label} ${s.slot_no}번` : `${s.slot_no}번`
 }
 

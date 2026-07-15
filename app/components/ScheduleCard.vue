@@ -54,7 +54,7 @@ const isMe = (c: Schedule) => !!props.meId && c.user_id === props.meId
           >
             <div class="flex w-full items-center gap-1">
               <span
-                class="truncate text-body-lg"
+                class="whitespace-nowrap text-body-lg"
                 :class="isMe(cell) ? 'font-bold text-primary-hover' : 'font-medium text-ink'"
               >
                 {{ cell.user?.name ?? '미배정' }}
