@@ -92,8 +92,24 @@ async function offerMine(mine: Schedule) {
     await swap.requestDirect(mine, active.value, message.value)
     show('교환 요청을 보냈어요')
     sheetOpen.value = false
-  } catch (e: any) {
-    toastError(e.message)
+  } catch (e) {
+    toastError(e)
+  } finally {
+    busy.value = false
+  }
+}
+
+// 되갚기: 이 셀 담당자가 내가 갚아야 할 상대(coverer)면 "대신 해주기" 가능.
+const owedAgreement = computed(() => cover.owedTo(active.value?.user_id))
+async function doRepay() {
+  if (!active.value || !owedAgreement.value) return
+  busy.value = true
+  try {
+    await swap.requestRepay(active.value, owedAgreement.value.id)
+    show('되갚기 요청을 보냈어요')
+    sheetOpen.value = false
+  } catch (e) {
+    toastError(e)
   } finally {
     busy.value = false
   }
@@ -124,8 +140,9 @@ async function offerMine(mine: Schedule) {
       >
         <AppIcon name="swap" :size="18" class="shrink-0 text-primary" />
         <p class="flex-1 text-body text-ink">
-          <span class="font-semibold">{{ c.covered?.name }}</span
-          >님이 대신해주기로 예정되어 있어요.
+          <span class="font-semibold">{{ c.otherName }}</span
+          ><template v-if="c.role === 'coverer'">님이 대신해주기로 예정되어 있어요.</template
+          ><template v-else>님 대신 하기로 예정되어 있어요.</template>
         </p>
         <button
           class="grid h-7 w-7 shrink-0 place-items-center rounded-full text-grey-500 active:bg-grey-100"
@@ -237,8 +254,20 @@ async function offerMine(mine: Schedule) {
             >
               <AppIcon name="swap" :size="20" /> 이 근무와 교환하기
             </button>
+
+            <!-- 되갚기: 내가 대신 받았던 상대의 근무를 갚을 수 있을 때 -->
+            <button
+              v-if="owedAgreement"
+              class="btn btn-lg btn-neutral mt-2 w-full"
+              :disabled="busy"
+              @click="doRepay"
+            >
+              <AppIcon name="swap" :size="20" /> 대신 해주기
+            </button>
             <p class="mt-3 text-center text-body-sm text-grey-500">
-              내 근무 중 하나를 골라 교환을 요청해요.
+              {{ owedAgreement
+                ? '교환하거나, 대신 해주고 되갚을 수 있어요.'
+                : '내 근무 중 하나를 골라 교환을 요청해요.' }}
             </p>
           </template>
         </template>

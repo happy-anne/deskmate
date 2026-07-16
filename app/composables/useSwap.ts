@@ -83,6 +83,30 @@ export function useSwap() {
     return data as RecruitApplication
   }
 
+  /** 되갚기 요청: 대신해준 사람(coverer)의 근무를 내가 대신 맡겠다고 요청. */
+  async function requestRepay(target: Schedule, coverId: string) {
+    if (!profile.value) throw new Error('로그인이 필요해요')
+    if (!target.user_id) throw new Error('상대 근무에 담당자가 없어요')
+    const { data, error } = await client
+      .from('swap_requests')
+      .insert({
+        type: 'repay',
+        requester_id: profile.value.id,
+        target_user_id: target.user_id,
+        target_schedule_id: target.id,
+        cover_id: coverId,
+        status: 'pending',
+      })
+      .select()
+      .single()
+    if (error) throw error
+    return data as SwapRequest
+  }
+  const acceptRepay = async (id: string) => {
+    const { error } = await client.rpc('accept_repay', { p_request_id: id })
+    if (error) throw new Error(error.message)
+  }
+
   const accept = async (id: string) => {
     const { error } = await client.rpc('accept_swap', { p_request_id: id })
     if (error) throw new Error(error.message)
@@ -109,6 +133,8 @@ export function useSwap() {
     openRecruit,
     applyRecruit,
     applyRecruitDeferred,
+    requestRepay,
+    acceptRepay,
     accept,
     reject,
     approveApplicant,

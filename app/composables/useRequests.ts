@@ -22,10 +22,16 @@ export function useRequests() {
   const meId = computed(() => profile.value?.id ?? null)
 
   const sent = computed(() =>
-    all.value.filter((r) => r.requester_id === meId.value && r.type === 'direct')
+    all.value.filter(
+      (r) =>
+        r.requester_id === meId.value && (r.type === 'direct' || r.type === 'repay')
+    )
   )
   const received = computed(() =>
-    all.value.filter((r) => r.target_user_id === meId.value && r.type === 'direct')
+    all.value.filter(
+      (r) =>
+        r.target_user_id === meId.value && (r.type === 'direct' || r.type === 'repay')
+    )
   )
   const openRecruits = computed(() =>
     all.value.filter(

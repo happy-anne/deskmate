@@ -128,10 +128,21 @@ async function applyDeferred() {
         </div>
         <div v-for="r in req.received.value" :key="r.id" class="card p-4">
           <div class="mb-3 flex items-center justify-between">
-            <span class="text-body-lg font-semibold text-ink">{{ r.requester?.name }}님의 요청</span>
+            <span class="text-body-lg font-semibold text-ink">
+              {{ r.requester?.name }}님의 {{ r.type === 'repay' ? '되갚기 요청' : '요청' }}
+            </span>
             <span class="badge" :class="STATUS[r.status]?.cls">{{ STATUS[r.status]?.label }}</span>
           </div>
-          <div class="flex items-center gap-3 rounded-xl bg-grey-50 p-3">
+
+          <!-- 되갚기(단방향): 내 근무를 상대가 대신 맡음 -->
+          <div v-if="r.type === 'repay'" class="rounded-xl bg-grey-50 p-3 text-center">
+            <p class="text-caption text-grey-500">대신 맡을 근무</p>
+            <p class="text-body-lg font-semibold text-primary">{{ schedLabel(r.target_schedule) }}</p>
+            <p class="text-body-sm text-grey-500">{{ r.requester?.name }}님이 대신 근무</p>
+          </div>
+
+          <!-- 지정 교환(양방향) -->
+          <div v-else class="flex items-center gap-3 rounded-xl bg-grey-50 p-3">
             <div class="flex-1 text-center">
               <p class="text-caption text-grey-500">받는 근무</p>
               <p class="text-body-lg font-semibold text-ink">{{ schedLabel(r.requester_schedule) }}</p>
@@ -144,12 +155,26 @@ async function applyDeferred() {
               <p class="text-body-sm text-grey-500">나</p>
             </div>
           </div>
+
           <p v-if="r.message" class="mt-3 rounded-lg bg-grey-50 px-3 py-2 text-body text-grey-600">
             "{{ r.message }}"
           </p>
           <div v-if="r.status === 'pending'" class="mt-3 flex gap-2">
             <button class="btn btn-lg btn-neutral flex-1" @click="act(swap.reject(r.id), '요청을 거절했어요')">거절</button>
-            <button class="btn btn-lg btn-primary flex-[2]" @click="act(swap.accept(r.id), '교환이 완료됐어요')">수락하기</button>
+            <button
+              v-if="r.type === 'repay'"
+              class="btn btn-lg btn-primary flex-[2]"
+              @click="act(swap.acceptRepay(r.id), '되갚기를 수락했어요')"
+            >
+              수락하기
+            </button>
+            <button
+              v-else
+              class="btn btn-lg btn-primary flex-[2]"
+              @click="act(swap.accept(r.id), '교환이 완료됐어요')"
+            >
+              수락하기
+            </button>
           </div>
         </div>
       </template>
@@ -161,10 +186,20 @@ async function applyDeferred() {
         </div>
         <div v-for="r in req.sent.value" :key="r.id" class="card p-4">
           <div class="mb-3 flex items-center justify-between">
-            <span class="text-body-lg font-semibold text-ink">{{ r.target?.name }}님에게</span>
+            <span class="text-body-lg font-semibold text-ink">
+              {{ r.target?.name }}님에게{{ r.type === 'repay' ? ' 되갚기' : '' }}
+            </span>
             <span class="badge" :class="STATUS[r.status]?.cls">{{ STATUS[r.status]?.label }}</span>
           </div>
-          <div class="flex items-center gap-3 rounded-xl bg-grey-50 p-3">
+
+          <!-- 되갚기(단방향): 상대 근무를 내가 대신 맡음 -->
+          <div v-if="r.type === 'repay'" class="rounded-xl bg-grey-50 p-3 text-center">
+            <p class="text-caption text-grey-500">내가 대신 맡을 근무</p>
+            <p class="text-body-lg font-semibold text-primary">{{ schedLabel(r.target_schedule) }}</p>
+          </div>
+
+          <!-- 지정 교환(양방향) -->
+          <div v-else class="flex items-center gap-3 rounded-xl bg-grey-50 p-3">
             <div class="flex-1 text-center">
               <p class="text-caption text-grey-500">내 근무</p>
               <p class="text-body-lg font-semibold text-primary">{{ schedLabel(r.requester_schedule) }}</p>

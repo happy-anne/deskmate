@@ -43,6 +43,7 @@ export interface Database {
       accept_swap: { Args: { p_request_id: string }; Returns: void }
       reject_swap: { Args: { p_request_id: string }; Returns: void }
       approve_recruit: { Args: { p_application_id: string }; Returns: void }
+      accept_repay: { Args: { p_request_id: string }; Returns: void }
       dismiss_cover: { Args: { p_id: string }; Returns: void }
       promote_placeholder: {
         Args: { p_placeholder_id: string; p_real_id: string }

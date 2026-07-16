@@ -61,7 +61,7 @@ export interface Schedule {
   user?: Pick<AppUser, 'id' | 'name'> | null
 }
 
-export type SwapType = 'direct' | 'recruit'
+export type SwapType = 'direct' | 'recruit' | 'repay'
 export type SwapStatus =
   | 'pending'
   | 'accepted'
@@ -76,6 +76,7 @@ export interface SwapRequest {
   target_user_id: string | null
   requester_schedule_id: string | null
   target_schedule_id: string | null
+  cover_id: string | null
   message: string | null
   status: SwapStatus
   created_at: string
@@ -100,6 +101,8 @@ export interface CoverAgreement {
   cover_month: string
   return_month: string
   dismissed: boolean
+  covered_dismissed: boolean
+  settled: boolean
   created_at: string
 }
 
