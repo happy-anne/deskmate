@@ -46,6 +46,8 @@ async function submit() {
   if (password.value.length < 6) return toastError('비밀번호는 6자 이상이어야 해요')
 
   loading.value = true
+  // 가입 직후 자동 로그인 시 세션 만료 검사 대신 활동시각을 찍게 한다.
+  sessionStorage.setItem('deskmate.freshLogin', '1')
   try {
     const { data, error } = await client.auth.signUp({
       email: email.value.trim(),

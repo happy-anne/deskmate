@@ -30,6 +30,8 @@ async function login() {
     return toastError('이메일과 비밀번호를 입력해주세요')
   }
   loading.value = true
+  // 방금 로그인했음을 app.vue에 알려 세션 만료 검사 대신 활동시각을 찍게 한다.
+  sessionStorage.setItem('deskmate.freshLogin', '1')
   const { error } = await client.auth.signInWithPassword({
     email: email.value.trim(),
     password: password.value,

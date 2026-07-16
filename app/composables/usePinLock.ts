@@ -34,6 +34,15 @@ export function usePinLock() {
     if (import.meta.client) localStorage.setItem(K_LAST, String(Date.now()))
   }
 
+  // 초기화(init) 타이밍과 무관하게 localStorage 를 직접 읽는다 —
+  // PIN 미설정 시 세션 타임아웃 판정에 쓰인다.
+  function isPinActive() {
+    return !!readLS(K_PIN) && readLS(K_ENABLED) !== '0'
+  }
+  function lastActiveAt() {
+    return Number(readLS(K_LAST) || 0)
+  }
+
   function setPin(pin: string) {
     if (!/^\d{4}$/.test(pin)) throw new Error('4자리 숫자를 입력해주세요')
     localStorage.setItem(K_PIN, pin)
@@ -77,6 +86,8 @@ export function usePinLock() {
     init,
     evaluateIdle,
     touch,
+    isPinActive,
+    lastActiveAt,
     setPin,
     verify,
     setEnabled,
