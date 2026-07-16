@@ -18,6 +18,7 @@ function urlForType(type?: string): string {
     case 'recruit_approved':
       return '/requests'
     case 'schedule_published':
+    case 'shift_reminder':
       return '/schedule'
     case 'swap_accepted':
       return '/history'
