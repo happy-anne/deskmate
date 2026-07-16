@@ -12,6 +12,7 @@ const ICON: Record<string, string> = {
   repay_request: 'swap',
   repay_done: 'check',
   schedule_published: 'calendar',
+  shift_reminder: 'calendar',
   signup_pending: 'user',
 }
 
@@ -22,7 +23,7 @@ function open(n: any) {
   else if (n.type === 'recruit_open') navigateTo('/requests?tab=recruit')
   else if (n.type === 'repay_request') navigateTo('/requests')
   else if (n.type === 'repay_done') navigateTo('/schedule')
-  else if (n.type === 'schedule_published') navigateTo('/schedule')
+  else if (n.type === 'schedule_published' || n.type === 'shift_reminder') navigateTo('/schedule')
   else if (n.type === 'swap_accepted') navigateTo('/history')
   else if (n.type === 'signup_pending') navigateTo('/admin/users')
 }
