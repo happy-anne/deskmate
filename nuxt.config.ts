@@ -39,6 +39,7 @@ export default defineNuxtConfig({
         // (keeps in-app navigation from leaking out to Safari). @vite-pwa only
         // injects this client-side, which iOS can miss at "Add to Home Screen".
         { rel: 'manifest', href: '/manifest.webmanifest' },
+        { rel: 'icon', href: '/favicon.ico', sizes: 'any' },
         { rel: 'apple-touch-icon', href: '/icons/icon-192.png' },
       ],
     },
