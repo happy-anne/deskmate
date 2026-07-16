@@ -47,7 +47,7 @@ async function login() {
 <template>
   <div class="flex min-h-dvh flex-col bg-white px-6 pb-10 pt-safe-t">
     <div class="mt-20">
-      <div class="grid h-14 w-14 place-items-center overflow-hidden rounded-2xl border-4 border-[#191f28] bg-white">
+      <div class="grid h-14 w-14 place-items-center overflow-hidden rounded-2xl border-2 border-[#191f28] bg-white">
         <img src="/favicon/favicon_512.png" alt="DeskMate" class="h-full w-full object-cover" />
       </div>
       <h1 class="mt-6 text-display-lg text-ink">DeskMate</h1>
