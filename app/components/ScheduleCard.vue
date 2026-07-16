@@ -33,10 +33,10 @@ const isMe = (c: Schedule) => !!props.meId && c.user_id === props.meId
         :key="slot.slot_no"
         class="flex items-stretch gap-3 px-4 py-2.5"
       >
-        <div class="w-14 shrink-0 py-1">
+        <div class="w-[4.5rem] shrink-0 py-1">
           <div class="text-subtitle text-ink">{{ slot.slot_no }}번</div>
-          <div class="text-caption text-grey-500 tnum">
-            {{ slot.start }}<br />~{{ slot.end }}
+          <div class="whitespace-nowrap text-caption text-grey-500 tnum">
+            {{ slot.start }}~{{ slot.end }}
           </div>
         </div>
 
