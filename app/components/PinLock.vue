@@ -1,5 +1,7 @@
 <script setup lang="ts">
 // Full-screen lock shown after 15 min idle. Verifies the device-local PIN.
+// 이 화면이 떠 있는 동안 body 배경을 흰색으로(마운트된 동안만 적용).
+useHead({ bodyAttrs: { style: 'background-color:#fff' } })
 const { verify } = usePinLock()
 const entry = ref('')
 const shake = ref(false)

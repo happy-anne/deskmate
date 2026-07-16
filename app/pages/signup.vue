@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { AppUser } from '~/types/db'
 definePageMeta({ layout: 'blank' })
+// 이 화면에서는 body 배경을 흰색으로.
+useHead({ bodyAttrs: { style: 'background-color:#fff' } })
 
 const client = useDb()
 const { error: toastError, show } = useToast()

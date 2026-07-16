@@ -1,5 +1,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'blank' })
+// 이 화면에서는 body 배경을 흰색으로.
+useHead({ bodyAttrs: { style: 'background-color:#fff' } })
 
 const client = useSupabaseClient()
 const authUser = useSupabaseUser()
@@ -45,8 +47,8 @@ async function login() {
 <template>
   <div class="flex min-h-dvh flex-col bg-white px-6 pb-10 pt-safe-t">
     <div class="mt-20">
-      <div class="grid h-14 w-14 place-items-center rounded-2xl bg-primary text-white">
-        <AppIcon name="calendar" :size="30" />
+      <div class="grid h-14 w-14 place-items-center overflow-hidden rounded-2xl border-4 border-[#191f28] bg-white">
+        <img src="/favicon/favicon_512.png" alt="DeskMate" class="h-full w-full object-cover" />
       </div>
       <h1 class="mt-6 text-display-lg text-ink">DeskMate</h1>
       <p class="mt-2 text-body-lg text-grey-600">
